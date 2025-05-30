@@ -7,13 +7,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/IdeaProjects/Libaries/DanoGameLab/DanoGameLab.jar!/" />
+          <root url="jar://$USER_HOME$/IdeaProjects/third party libraries/DanoGameLab 1.1.0 17.10.23/DanoGameLab.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$USER_HOME$/IdeaProjects/third party libraries/DanoGameLab 1.1.0 17.10.23/src" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>
