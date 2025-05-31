@@ -20,6 +20,8 @@ public class Terrain {
 
 	private static final float HEIGHT_FACTOR   = Block.SIZE * 9f;
 	private static final float HORIZONTAL_SCALE = 0.02f;
+	private static final int STARTING_POINT=100;
+	private static final float PART_WINDOW=2/3f;
 	/** The base color used for ground blocks before approximation. */
 	private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
 
@@ -43,8 +45,8 @@ public class Terrain {
 	 */
 	public Terrain(Vector2 windowDimensions, int seed) {
 		this.windowDimensions = windowDimensions;
-		this.groundHeightAtX0 =(int)(windowDimensions.y() * 2 / 3f);
-		this.noiseGenerator = new NoiseGenerator(seed, 100);
+		this.groundHeightAtX0 =(int)(windowDimensions.y() * PART_WINDOW);
+		this.noiseGenerator = new NoiseGenerator(seed, STARTING_POINT);
 	}
 
 	/**

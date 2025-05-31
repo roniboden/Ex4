@@ -3,7 +3,6 @@ package pepse.world.pepse.world.daynight;
 import danogl.GameObject;
 import danogl.components.Transition;
 import danogl.components.Transition.TransitionType;
-import danogl.components.Transition.Interpolator;
 import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
