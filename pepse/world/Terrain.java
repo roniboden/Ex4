@@ -17,8 +17,9 @@ import java.util.List;
  * and allows generation of a list of blocks over a continuous horizontal range.
  */
 public class Terrain {
-	private static final float AMPLITUDE = 80f;
-	private static final float FREQUENCY = 0.03f;
+
+	private static final float HEIGHT_FACTOR   = Block.SIZE * 9f;
+	private static final float HORIZONTAL_SCALE = 0.02f;
 	/** The base color used for ground blocks before approximation. */
 	private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
 
@@ -32,7 +33,7 @@ public class Terrain {
 	private final NoiseGenerator noiseGenerator;
 
 	/** The base height at x=0 for terrain, used as a reference point. */
-	private final float groundHeightAtX0;
+	private final int groundHeightAtX0;
 
 	/**
 	 * Constructs a Terrain object.
@@ -42,8 +43,8 @@ public class Terrain {
 	 */
 	public Terrain(Vector2 windowDimensions, int seed) {
 		this.windowDimensions = windowDimensions;
+		this.groundHeightAtX0 =(int)(windowDimensions.y() * 2 / 3f);
 		this.noiseGenerator = new NoiseGenerator(seed, 100);
-		this.groundHeightAtX0 = windowDimensions.y() * 2 / 3f;
 	}
 
 	/**
@@ -53,9 +54,9 @@ public class Terrain {
 	 * @param x The x-coordinate in the world for which to calculate terrain height.
 	 * @return The y-coordinate of the top of the ground at this x-coordinate.
 	 */
-	public double groundHeightAt(float x) {
-		double noise = noiseGenerator.noise(x, FREQUENCY); 
-		return groundHeightAtX0 + (float)(noise * AMPLITUDE);
+	public float groundHeightAt(float x) {
+		double noise = noiseGenerator.noise(x * HORIZONTAL_SCALE, HEIGHT_FACTOR);
+		return groundHeightAtX0 + (float) noise;
 	}
 
 	/**
@@ -66,53 +67,28 @@ public class Terrain {
 	 * @param maxX The maximum x-coordinate (exclusive) for which to create terrain blocks.
 	 * @return A list of Block objects representing terrain within the specified range.
 	 */
-//	public List<Block> createInRange(int minX, int maxX) {
-//		List<Block> blocks = new ArrayList<>();
-//		Renderable blockRenderable = new RectangleRenderable(
-//				ColorSupplier.approximateColor(BASE_GROUND_COLOR)
-//		);
-//
-//		// Align range to block size
-//		int startX = (minX / Block.SIZE) * Block.SIZE;
-//		int endX = ((maxX + Block.SIZE - 1) / Block.SIZE) * Block.SIZE;
-//
-//		for (int x = startX; x < endX; x += Block.SIZE) {
-//			float groundTopY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
-//
-//			for (int i = 0; i < TERRAIN_DEPTH; i++) {
-//				Vector2 blockTopLeft = new Vector2(x, groundTopY + i * Block.SIZE);
-//				Block block = new Block(blockTopLeft, blockRenderable);
-//				//need to be removed
-//				block.setTag("ground");
-//				blocks.add(block);
-//			}
-//		}
-//
-//		return blocks;
-//	}
+
 	public List<Block> createInRange(int minX, int maxX) {
 		List<Block> blocks = new ArrayList<>();
-		Renderable blockRenderable = new RectangleRenderable(
-				ColorSupplier.approximateColor(BASE_GROUND_COLOR)
-		);
+		Renderable rend = new RectangleRenderable(
+				ColorSupplier.approximateColor(BASE_GROUND_COLOR));
 
 		int startX = (minX / Block.SIZE) * Block.SIZE;
-		int endX = ((maxX + Block.SIZE - 1) / Block.SIZE) * Block.SIZE;
+		int endX   = ((maxX + Block.SIZE - 1) / Block.SIZE) * Block.SIZE;
 
 		for (int x = startX; x < endX; x += Block.SIZE) {
-			float rawHeight = (float) groundHeightAt(x);
-			System.out.println("rawHeight: " + rawHeight);
-			int topBlockY = ((int)(rawHeight / Block.SIZE)) * Block.SIZE;
+
+			float rawH     = groundHeightAt(x);
+			int   topBlock = (int)(Math.floor(rawH / Block.SIZE) * Block.SIZE);
 
 			for (int i = 0; i < TERRAIN_DEPTH; i++) {
-				int blockY = topBlockY + i * Block.SIZE;
-				Vector2 topLeft = new Vector2(x, blockY);
-				Block block = new Block(topLeft, blockRenderable);
-				block.setTag("ground");
-				blocks.add(block);
+				Vector2 pos = new Vector2(x, topBlock + i * Block.SIZE);
+				Block b = new Block(pos, rend);
+				b.setTag("ground");
+				blocks.add(b);
 			}
 		}
-
 		return blocks;
 	}
+
 }
