@@ -9,12 +9,11 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
-import pepse.world.Block;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.pepse.world.daynight.Night;
 import pepse.world.pepse.world.daynight.Sun;
 import pepse.world.pepse.world.daynight.SunHalo;
+import pepse.world.EnergyIndicator;
 
 import java.util.List;
 import java.util.Random;
@@ -49,6 +48,11 @@ public class PepseGameManager extends GameManager {
 		this.gameObjects().addGameObject(sun, Layer.BACKGROUND);
 		GameObject sunHalo = SunHalo.create(sun);
 		this.gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
+		Avatar avatar=new Avatar(new Vector2(4,windowDimensions.y() * 2/3f),inputListener,imageReader);
+		this.gameObjects().addGameObject(avatar,Layer.DEFAULT);
+		GameObject energyBar = EnergyIndicator.create(avatar, new Vector2(4,4));
+		gameObjects().addGameObject(energyBar, Layer.BACKGROUND);
+
 
 	}
 
