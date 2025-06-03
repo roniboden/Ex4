@@ -5,63 +5,41 @@ import danogl.components.Component;
 import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import pepse.world.Avatar;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
 
 /**
- * Displays the avatar's energy as a numeric percentage ("87 %") in the UI.
- *
- * <p>The text is rendered in <i>camera-space</i>, so it remains anchored to a
- * fixed screen position regardless of camera movement. Every frame, the text
- * is updated to reflect the avatar's current energy.</p>
+ * Shows the avatar’s current energy as “NN %” in the top-left corner.
  */
 public final class EnergyIndicator {
 
-	/* ─────────────────  layout / appearance  ───────────────────────── */
-
-	/** Screen-space position (pixels from top-left). */
-	private static final Vector2 TEXT_POSITION = new Vector2(20, 18);
-
-	/** Font size in pixels (height). */
-	private static final int FONT_SIZE = 20;
-
-	/** Text colour (black). */
-	private static final Color TEXT_COLOR = Color.BLACK;
-
-	/** Formatter to show a whole-number percentage (no decimals). */
+	/* ---------- tuning constants ---------- */
+	private static final Vector2 TEXT_POSITION   = new Vector2(20, 18);   // screen coords (px)
+	private static final Vector2 TEXT_DIMENSIONS = new Vector2(80, 30);   // logical size
+	private static final String  FONT_NAME       = "Arial";               // any installed font
+	private static final Color   TEXT_COLOR      = Color.BLACK;
 	private static final DecimalFormat PERCENT_FMT = new DecimalFormat("##0");
 
-	private EnergyIndicator() {}   // utility class – prevent instantiation
+	private EnergyIndicator() { }   // static factory only
 
+	/** Build the HUD label and wire it to the avatar. */
+	public static GameObject create(Avatar avatar) {
 
-	/* ─────────────────  factory  ───────────────────────────────────── */
-
-	/**
-	 * Create a {@code GameObject} that shows the avatar's current energy in
-	 * percentage form (e.g., "74 %").
-	 *
-	 * @param avatar the avatar from which to query energy
-	 * @return       configured label; caller must add to {@code gameObjects()}
-	 */
-	public static GameObject create(Avatar avatar, Vector2 pos) {
-
+		/* The ctor variant: (text, fontName, isItalic, isBold) */
 		TextRenderable renderable =
-				new TextRenderable("100%" );
+				new TextRenderable("100 %", FONT_NAME, /*italic*/false, /*bold*/true);
+		renderable.setColor(TEXT_COLOR);  // colour is set afterwards
 
-		GameObject label = new GameObject(TEXT_POSITION,
-				pos,
-				renderable);
-
+		GameObject label = new GameObject(TEXT_POSITION, TEXT_DIMENSIONS, renderable);
 		label.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 		label.setTag("energyText");
 
+		/* Live-update once per frame */
 		label.addComponent(new Component() {
 			@Override
 			public void update(float deltaTime) {
-				int ratio = avatar.getEnergy();
-				renderable.setString(PERCENT_FMT.format(ratio) + " %");
+				renderable.setString(PERCENT_FMT.format(avatar.getEnergy()) + " %");
 			}
 		});
 
