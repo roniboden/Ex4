@@ -10,7 +10,11 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 
 /**
- * Shows the avatar’s current energy as “NN %” in the top-left corner.
+ * Displays the avatar’s current energy as a percentage (e.g., “NN %”) in the top-left corner of the screen.
+ * <p>
+ * This class provides a static factory method to create a HUD label that continuously updates each frame
+ * to reflect the avatar’s current energy level. The label is rendered in CAMERA coordinates so that it
+ * remains fixed on the screen regardless of world movements.
  */
 public final class EnergyIndicator {
 
@@ -21,9 +25,22 @@ public final class EnergyIndicator {
 	private static final Color   TEXT_COLOR      = Color.BLACK;
 	private static final DecimalFormat PERCENT_FMT = new DecimalFormat("##0");
 
+	/**
+	 * Private constructor to prevent instantiation. Use the static create(...) method instead.
+	 */
 	private EnergyIndicator() { }   // static factory only
 
-	/** Build the HUD label and wire it to the avatar. */
+	/**
+	 * Builds a GameObject that displays the avatar’s current energy as a percentage in the top-left corner.
+	 * <p>
+	 * The label is a {@link TextRenderable} with bold Arial font, colored black. It is positioned at
+	 * {@code TEXT_POSITION} in CAMERA coordinates with dimensions {@code TEXT_DIMENSIONS}, and is tagged
+	 * "energyText". A {@link Component} is attached to the label so that in each {@code update} call, the
+	 * string is set to the avatar’s current energy (formatted by {@link #PERCENT_FMT}) followed by " %".
+	 *
+	 * @param avatar The {@link Avatar} instance whose energy level will be displayed.
+	 * @return A {@link GameObject} representing the energy indicator HUD element.
+	 */
 	public static GameObject create(Avatar avatar) {
 
 		/* The ctor variant: (text, fontName, isItalic, isBold) */

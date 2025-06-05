@@ -16,10 +16,10 @@ import java.util.List;
  * It uses a noise function to determine terrain height at any x-coordinate,
  * and allows generation of a list of blocks over a continuous horizontal range.
  */
-public class Terrain {
+public class Terrain implements GroundHeightProvider {
 
-	private static final float HEIGHT_FACTOR   = Block.SIZE * 9f;
-	private static final float HORIZONTAL_SCALE = 0.02f;
+	private static final float HEIGHT_FACTOR   = Block.SIZE * 20f;
+	private static final float HORIZONTAL_SCALE = 0.08f;
 	private static final int STARTING_POINT=100;
 	private static final float PART_WINDOW=2/3f;
 	/** The base color used for ground blocks before approximation. */
@@ -76,11 +76,11 @@ public class Terrain {
 				ColorSupplier.approximateColor(BASE_GROUND_COLOR));
 
 		int startX = (minX / Block.SIZE) * Block.SIZE;
-		int endX   = ((maxX + Block.SIZE - 1) / Block.SIZE) * Block.SIZE;
+		int endX = ((maxX + Block.SIZE - 1) / Block.SIZE) * Block.SIZE;
 
 		for (int x = startX; x < endX; x += Block.SIZE) {
 
-			float rawH     = groundHeightAt(x);
+			float rawH = groundHeightAt(x);
 			int   topBlock = (int)(Math.floor(rawH / Block.SIZE) * Block.SIZE);
 
 			for (int i = 0; i < TERRAIN_DEPTH; i++) {

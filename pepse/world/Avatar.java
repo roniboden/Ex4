@@ -9,11 +9,13 @@ import java.awt.event.KeyEvent;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.ImageRenderable;
-import danogl.util.Vector2;
 
 /**
- * Avatar with move/jump/energy logic, plus flags so that Cloud can detect
- * when the avatar is in the air and has just jumped.
+ * Represents the player-controlled avatar in the Pepse world.
+ * The Avatar can move left/right, jump, and has an energy meter that depletes on movement/jumping
+ * and regenerates when idle on the ground. The class handles animation switching (idle/run/jump),
+ * flipping the sprite based on direction, and exposes flags to allow other objects (e.g., Cloud)
+ * to detect when a jump begins or when the avatar is airborne.
  */
 public class Avatar extends GameObject {
 	private static final float GRAVITY        = 600f;
@@ -28,7 +30,7 @@ public class Avatar extends GameObject {
 	private AnimationRenderable runAnim;
 	private AnimationRenderable jumpAnim;
 	private boolean facingLeft = false; // to handle flipping
-	private String state = "idle"; // "idle", "run", or "jump"
+	private String state = "idle"; // current animation state: "idle", "run", or "jump"
 
 	private final UserInputListener inputListener;
 	private float energy = MAX_ENERGY;
@@ -37,6 +39,15 @@ public class Avatar extends GameObject {
 	private boolean isOnGround = false;
 	private boolean jumpJustStarted = false;
 
+	/**
+	 * Constructs an Avatar instance at the specified position with input and image resources.
+	 * Initializes physics parameters (gravity, collision prevention) and loads the idle, run,
+	 * and jump animations from image assets. Sets the initial renderable to the idle animation.
+	 *
+	 * @param topLeftCorner  The top-left corner of the avatar’s bounding box in world coordinates.
+	 * @param inputListener  The UserInputListener for capturing keyboard events (left, right, jump).
+	 * @param imageReader    The ImageReader used to load PNG frames for animations.
+	 */
 	public Avatar(Vector2 topLeftCorner,
 				  UserInputListener inputListener,
 				  ImageReader imageReader) {
@@ -49,16 +60,16 @@ public class Avatar extends GameObject {
 		transform().setAccelerationY(GRAVITY);
 		this.inputListener = inputListener;
 
-		// --- Idle animation ---
+		// --- Idle animation frames ---
 		ImageRenderable[] idleFrames = new ImageRenderable[] {
 				imageReader.readImage("pepse/assets/idle_0.png", true),
 				imageReader.readImage("pepse/assets/idle_1.png", true),
 				imageReader.readImage("pepse/assets/idle_2.png", true),
 				imageReader.readImage("pepse/assets/idle_3.png", true)
 		};
-		idleAnim = new AnimationRenderable(idleFrames, 0.2f); // change 0.2f to set frame rate
+		idleAnim = new AnimationRenderable(idleFrames, 0.2f);
 
-// --- Jump animation ---
+		// --- Jump animation frames ---
 		ImageRenderable[] jumpFrames = new ImageRenderable[] {
 				imageReader.readImage("pepse/assets/jump_0.png", true),
 				imageReader.readImage("pepse/assets/jump_1.png", true),
@@ -67,7 +78,7 @@ public class Avatar extends GameObject {
 		};
 		jumpAnim = new AnimationRenderable(jumpFrames, 0.1f);
 
-// --- Run animation ---
+		// --- Run animation frames ---
 		ImageRenderable[] runFrames = new ImageRenderable[] {
 				imageReader.readImage("pepse/assets/run_0.png", true),
 				imageReader.readImage("pepse/assets/run_1.png", true),
@@ -78,11 +89,17 @@ public class Avatar extends GameObject {
 		};
 		runAnim = new AnimationRenderable(runFrames, 0.1f);
 
-// Set initial animation
+		// Set initial animation to idle
 		renderer().setRenderable(idleAnim);
-
 	}
 
+	/**
+	 * Updates the avatar’s state each frame: handles gravity, horizontal movement based on left/right keys,
+	 * jump logic when the space key is pressed, energy consumption and regeneration, animation switching,
+	 * and flipping the sprite horizontally based on direction of motion.
+	 *
+	 * @param deltaTime Time (in seconds) since the last frame; used for consistent physics updates.
+	 */
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
@@ -90,7 +107,7 @@ public class Avatar extends GameObject {
 		float xVel = transform().getVelocity().x();
 		float yVel = transform().getVelocity().y();
 
-		// Choose state
+		// Determine new animation state based on vertical/horizontal velocities
 		String newState;
 		if (yVel != 0) {
 			newState = "jump";
@@ -100,7 +117,7 @@ public class Avatar extends GameObject {
 			newState = "idle";
 		}
 
-		// Flip sprite if direction changed
+		// Flip sprite horizontally if moving left vs. right
 		if (xVel < 0 && !facingLeft) {
 			renderer().setIsFlippedHorizontally(true);
 			facingLeft = true;
@@ -109,7 +126,7 @@ public class Avatar extends GameObject {
 			facingLeft = false;
 		}
 
-		// Change animation if needed
+		// Switch animation if the state changed
 		if (!newState.equals(state)) {
 			switch (newState) {
 				case "idle":
@@ -125,12 +142,13 @@ public class Avatar extends GameObject {
 			state = newState;
 		}
 
+		// Read input for movement/jump
 		boolean leftPressed  = inputListener.isKeyPressed(KeyEvent.VK_LEFT);
 		boolean rightPressed = inputListener.isKeyPressed(KeyEvent.VK_RIGHT);
 		boolean wantsJump    = inputListener.isKeyPressed(KeyEvent.VK_SPACE);
 
-		// Run left
-	    xVel = 0f;
+		// Horizontal movement: consume energy per frame while moving
+		xVel = 0f;
 		if (leftPressed && energy >= MOVE_COST) {
 			xVel = -VELOCITY_X;
 			energy -= MOVE_COST;
@@ -141,59 +159,85 @@ public class Avatar extends GameObject {
 		}
 		transform().setVelocityX(xVel);
 
-		// Detect on-ground: vertical velocity == 0
-		boolean onGroundNow = getVelocity().y() == 0f;
+		// Check if on the ground (vertical velocity == 0)
+		boolean onGroundNow = transform().getVelocity().y() == 0f;
 
-		// Handle jump input
+		// Handle jump input: only jump if on ground and enough energy
 		if (wantsJump && onGroundNow && energy >= JUMP_COST) {
 			transform().setVelocityY(VELOCITY_Y);
 			energy -= JUMP_COST;
-			// Mark that a jump has just started
 			jumpJustStarted = true;
 		}
 
-		// Regenerate energy when idle on ground
+		// Regenerate energy when idle on ground and not jumping
 		if (xVel == 0f && onGroundNow && !wantsJump && energy < MAX_ENERGY) {
 			energy += IDLE_REGEN;
 		}
 		energy = Math.max(0f, Math.min(MAX_ENERGY, energy));
 
-		// Update ground flag
+		// Update ground state flag
 		isOnGround = onGroundNow;
 	}
 
+	/**
+	 * Called when the avatar collides with another GameObject. If the other object is tagged "block",
+	 * the avatar’s vertical velocity is set to zero to simulate landing on the block.
+	 *
+	 * @param other     The other GameObject involved in the collision.
+	 * @param collision The Collision object containing collision details (ignored here).
+	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		super.onCollisionEnter(other, collision);
-		// If we collide with a “block” (tagged "block"), we stop vertical motion
-		if (other.getTag().equals("block")) {
+		if (other.getTag().equals("ground")) {
 			transform().setVelocityY(0f);
 		}
 	}
 
 	/**
-	 * Returns true if the avatar is currently in the air (not on ground).
-	 * Used by Cloud to know when to spawn rain.
+	 * Returns true if the avatar is currently airborne (not on the ground).
+	 * Used by Cloud to determine when to trigger rain.
+	 *
+	 * @return {@code true} if the avatar is in the air; {@code false} if on ground.
 	 */
 	public boolean isInAir() {
 		return !isOnGround;
 	}
 
 	/**
-	 * Returns true the very first frame after the avatar leaves the ground.
-	 * After checking, call clearJumpJustStarted() to reset the flag.
+	 * Returns true on the very first frame after the avatar leaves the ground (i.e., starts a jump).
+	 * After checking, callers should invoke {@link #clearJumpJustStarted()} to reset this flag.
+	 *
+	 * @return {@code true} if the jump has just started; {@code false} otherwise.
 	 */
 	public boolean jumpJustStarted() {
 		return jumpJustStarted;
 	}
 
-	/** Clears the “just started” jump flag—call once after reading it. */
+	/**
+	 * Clears the "just started jump" flag. Call this method once after reading {@link #jumpJustStarted()}
+	 * to reset the flag for subsequent frames.
+	 */
 	public void clearJumpJustStarted() {
 		jumpJustStarted = false;
 	}
 
-	/** Current energy level of the avatar. */
+	/**
+	 * Returns the avatar’s current energy level, clamped between 0 and {@value #MAX_ENERGY}.
+	 * Energy is consumed during movement and jumping, and regenerates when idle on the ground.
+	 *
+	 * @return The current energy value.
+	 */
 	public float getEnergy() {
 		return energy;
+	}
+	/**
+	 * Adds the specified amount of energy to the avatar, clamping it to a maximum of {@value #MAX_ENERGY}.
+	 * This method is used by collectable items like Fruit to restore energy.
+	 *
+	 * @param amount The amount of energy to add (can be negative to consume energy).
+	 */
+	public void addEnergy(float amount) {
+		energy = Math.min(MAX_ENERGY, energy + amount);
 	}
 }
