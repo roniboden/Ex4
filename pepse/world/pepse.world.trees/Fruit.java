@@ -12,68 +12,98 @@ import pepse.world.LayerProvider;
 import java.awt.Color;
 import java.util.Random;
 
-/** A collectable fruit that restores energy, then re-grows after a delay. */
+/**
+ * A collectable fruit that restores the avatar’s energy and then “re-grows”
+ * after a cooldown.
+ *
+ * <p>When the avatar collides with the fruit it:</p>
+ * <ol>
+ *   <li>adds {@link #ENERGY_VALUE} units of energy to the avatar;</li>
+ *   <li>becomes invisible and non-collidable;</li>
+ *   <li>schedules a {@link ScheduledTask} that reactivates the fruit after
+ *       {@link #RESPAWN_TIME} seconds, giving it a fresh random colour so the
+ *       player can tell it has respawned.</li>
+ * </ol>
+ */
 public class Fruit extends GameObject implements LayerProvider {
 
-	/* ---------------- constants ---------------- */
+	/** Energy units restored when picked up. */
 	public static final float ENERGY_VALUE = 10f;
-	private static final float RESPAWN_TIME = 30f;        // seconds
-	public static final float DIAM = Block.SIZE * 0.6f;  // 60 % of a leaf tile
 
-	/* ---------------- instance fields ---------------- */
-	private final OvalRenderable renderable;              // cached so we can restore it
-	private final Random rand;                            // for new colour on respawn
+	/** Seconds until the fruit reappears after being collected. */
+	private static final float RESPAWN_TIME = 30f;
 
+	/** Diameter of the fruit (60 % of a leaf tile). */
+	public static final float DIAM = Block.SIZE * 0.6f;
+
+	private final OvalRenderable renderable;
+	private final Random rand;
+
+	/**
+	 * Creates a new fruit game object.
+	 *
+	 * @param topLeftCorner world-space position of the fruit’s top-left corner
+	 * @param rand          deterministic random source used for respawn colour
+	 */
 	public Fruit(Vector2 topLeftCorner, Random rand) {
 		super(topLeftCorner,
 				new Vector2(DIAM, DIAM),
 				new OvalRenderable(randomColor(rand)));
+
 		this.renderable = (OvalRenderable) renderer().getRenderable();
-		this.rand = rand;
+		this.rand       = rand;
 		setTag("fruit");
 	}
 
-	/* ------------------------------------------------- */
+	/** Handles collision with the avatar: recharge, hide, and schedule respawn. */
 	@Override
 	public void onCollisionEnter(GameObject other,
 								 danogl.collisions.Collision col) {
 		super.onCollisionEnter(other, col);
 
-		if (!"avatar".equals(other.getTag())) return;
+		if (!"avatar".equals(other.getTag())) {
+			return;
+		}
 
-		/* 1) recharge avatar energy */
 		((Avatar) other).addEnergy(ENERGY_VALUE);
-
-		/* 2) hide & deactivate this fruit */
 		deactivate();
 
-		/* 3) schedule reactivation (“re-grow”) */
 		new ScheduledTask(
-				this,                     // owner; lives for the timer duration
+				this,              // the task lives as long as this object
 				RESPAWN_TIME,
 				false,
 				this::reactivate
 		);
 	}
 
-	/* ---------------- helpers ---------------- */
+	/** Makes the fruit invisible and non-collidable immediately after pickup. */
 	private void deactivate() {
-		renderer().setRenderable(null);                   // invisible
-		setDimensions(Vector2.ZERO);                      // no collisions
+		renderer().setRenderable(null);
+		setDimensions(Vector2.ZERO);
 	}
 
+	/** Restores the fruit’s renderable, size, and gives it a fresh random colour. */
 	private void reactivate() {
-		// random fresh colour to look “new”
 		renderer().setRenderable(new OvalRenderable(randomColor(rand)));
 		setDimensions(new Vector2(DIAM, DIAM));
 	}
 
+	/**
+	 * Picks a random colour from a small palette so each respawn looks “fresh”.
+	 *
+	 * @param r random source (deterministic for this fruit)
+	 * @return  a colour chosen from the predefined palette
+	 */
 	private static Color randomColor(Random r) {
-		Color[] palette = { new Color(220, 40, 40),
-				new Color(240,180, 30),
-				new Color(160, 40,160) };
+		Color[] palette = {
+				new Color(220, 40, 40),   // red
+				new Color(240,180, 30),   // orange
+				new Color(160, 40,160)    // purple
+		};
 		return palette[r.nextInt(palette.length)];
 	}
+
+	/** Fruits belong on the static layer so they collide with the avatar. */
 	@Override
 	public int defaultLayer() {
 		return Layer.STATIC_OBJECTS;
