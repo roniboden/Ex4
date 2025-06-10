@@ -15,6 +15,7 @@ import java.awt.Color;
  * Creates a yellow‐colored circular “sun” that orbits around a fixed center
  * in a perfect circle. One full 360° orbit takes exactly `cycleLength` seconds,
  * and the motion is driven by a Danogl Transition with a LINEAR interpolator.
+ * @author Roni
  */
 public class Sun {
 
@@ -24,6 +25,7 @@ public class Sun {
      * @param windowDimensions The width & height of the window (used to compute orbit center).
      * @param cycleLength      How many seconds one full 360° orbit should take.
      * @return A GameObject (circle) tagged "sun" that continuously orbits.
+	 *
      */
     public static GameObject create(Vector2 windowDimensions, float cycleLength) {
         // ────────────────────────────────────────────────────────────────────
@@ -60,7 +62,7 @@ public class Sun {
 
         // 5) Create the GameObject at that initial center, with diameter = sunRadius*2:
         GameObject sun = new GameObject(
-                initialSunCenter,                          // top-left = center minus radius? No, setCenter will handle it.
+                initialSunCenter,
                 new Vector2(sunRadius * 2f, sunRadius * 2f),
                 renderable
         );

@@ -10,6 +10,7 @@ package pepse.world;
  * Implementations are expected to be
  * <em>pure</em>: calling {@link #groundHeightAt(float)} with the same
  * {@code x} must always return the same value for a given world seed.</p>
+ * @author Noa
  */
 public interface GroundHeightProvider {
 

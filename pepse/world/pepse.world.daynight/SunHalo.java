@@ -30,6 +30,7 @@ import java.awt.Color;
  * The halo registers an anonymous {@link Component} that, every frame, copies
  * the Sun’s centre to its own, yielding a lightweight “follow” behaviour with
  * no need for an explicit {@code Transition}.
+ * @author Noa
  */
 public final class SunHalo {
 
@@ -54,7 +55,6 @@ public final class SunHalo {
 		Vector2 haloDims = sun.getDimensions().mult(SIZE_FACTOR);
 		GameObject halo = new GameObject(Vector2.ZERO, haloDims, renderable);
 		halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-		halo.setTag("sunHalo");
 		halo.addComponent(new Component() {
 			/** Copy the Sun’s centre into the halo once per frame. */
 			@Override

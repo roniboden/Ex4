@@ -19,6 +19,7 @@ import java.util.List;
  * For every surface column we add ground blocks
  * downward until we exceed one full window-height, ensuring the player can
  * never see “under” the terrain even when the camera follows the avatar.</p>
+ * @author Noa
  */
 public class Terrain implements GroundHeightProvider {
 
@@ -38,6 +39,7 @@ public class Terrain implements GroundHeightProvider {
 
 	/** Base ground colour before subtle random variation. */
 	private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+	private static String GROUND_TAG = "ground";
 
 	/* ─── instance fields ──────────────────────────────────────────────── */
 
@@ -104,7 +106,7 @@ public class Terrain implements GroundHeightProvider {
 			float requiredDepth = windowDimensions.y() + Block.SIZE;
 			for (float y = topBlockY; y < topBlockY + requiredDepth; y += Block.SIZE) {
 				Block b = new Block(new Vector2(x, y), rend);
-				b.setTag("ground");
+				b.setTag(GROUND_TAG);
 				blocks.add(b);
 			}
 		}

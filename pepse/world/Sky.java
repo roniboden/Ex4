@@ -11,6 +11,7 @@ import java.awt.*;
  * Represents the sky background in the Pepse world. Creates a solid-color rectangle
  * spanning the entire window, rendered in CAMERA coordinates so it remains fixed
  * behind all other world objects.
+ * @author Noa
  */
 public class Sky {
 	/** The base color used to fill the sky (hex code #80C6E5). */
@@ -29,7 +30,6 @@ public class Sky {
 				new RectangleRenderable(BASIC_SKY_COLOR));
 		sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 		// NEED TO BE REMOVED AFTER DEBUGGING
-		sky.setTag("sky");
 		return sky;
 	}
 }

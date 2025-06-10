@@ -23,10 +23,14 @@ import java.util.Random;
  *   <li>Drifts the marker leftward at a constant speed (CLOUD_SPEED), wrapping around when off-screen.</li>
  *   <li>Repositions each cloud block each frame based on its stored offset from the marker.</li>
  *   <li>Listens for {@code avatar.jumpJustStarted()} to spawn exactly one raindrop at a random X under the cloud.</li>
- *   <li>While {@code avatar.isInAir()}, spawns additional raindrops every RAIN_SPAWN_INTERVAL seconds, each at a random X under the cloud.</li>
+ *   <li>While {@code avatar.isInAir()}, spawns additional raindrops every RAIN_SPAWN_INTERVAL seconds,
+ *   each at a random X under the cloud.</li>
  * </ul>
- * Each raindrop falls at a fixed speed (RAIN_FALL_SPEED) and fades out over RAIN_FADE_DURATION seconds once it reaches the bottom of the window.
+ * Each raindrop falls at a fixed speed (RAIN_FALL_SPEED) and fades out over RAIN_FADE_DURATION seconds
+ * once it reaches the bottom of the window.
+ * @author Roni
  */
+
 public class Cloud {
 
 	/** Pixel‐art layout (5×6) for the cloud shape. 1 = block present, 0 = transparent. */
@@ -73,13 +77,15 @@ public class Cloud {
 	 *       <li>Repositions every block each frame so that blockCenter = markerCenter + storedOffset.</li>
 	 *       <li>When {@code avatar.jumpJustStarted()} is true, spawns a single raindrop at a random X under the cloud,
 	 *           then resets the jump flag and rain-timer.</li>
-	 *       <li>While {@code avatar.isInAir()}, once RAIN_SPAWN_INTERVAL seconds have elapsed, spawns another raindrop
+	 *       <li>While {@code avatar.isInAir()}, once RAIN_SPAWN_INTERVAL
+	 *       seconds have elapsed, spawns another raindrop
 	 *           at a random X under the cloud, then resets the rain-timer.</li>
 	 *     </ul>
 	 *   <li>Each raindrop is an independent GameObject in CAMERA space that:
 	 *     <ul>
 	 *       <li>Falls downward at RAIN_FALL_SPEED.</li>
-	 *       <li>Once it reaches the bottom of the window, fades its alpha from 1 to 0 over RAIN_FADE_DURATION.</li>
+	 *       <li>Once it reaches the bottom of the window, fades its
+	 *       alpha from 1 to 0 over RAIN_FADE_DURATION.</li>
 	 *       <li>Is removed from the scene once its fade-out completes.</li>
 	 *     </ul>
 	 *   </li>
@@ -167,9 +173,11 @@ public class Cloud {
 			 * <ol>
 			 *   <li>Move the cloud marker left by CLOUD_SPEED * dt; wrap to the right edge if off-screen.</li>
 			 *   <li>Reposition each cloud block to (markerCenter + its stored offset).</li>
-			 *   <li>If {@code avatar.jumpJustStarted()} is true, spawn one raindrop at a random X under the cloud,
+			 *   <li>If {@code avatar.jumpJustStarted()} is true, spawn one raindrop
+			 *   at a random X under the cloud,
 			 *       clear the jump flag, and reset the rain timer.</li>
-			 *   <li>Otherwise, if {@code timeSinceLastRain} ≥ RAIN_SPAWN_INTERVAL and {@code avatar.isInAir()} is true,
+			 *   <li>Otherwise, if {@code timeSinceLastRain} ≥ RAIN_SPAWN_INTERVAL and
+			 *   {@code avatar.isInAir()} is true,
 			 *       spawn a raindrop at a random X under the cloud and reset the rain timer.</li>
 			 * </ol>
 			 *

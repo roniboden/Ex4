@@ -1,0 +1,26 @@
+noa.jacobovich,roni_boden
+322818204,322643586
+
+The trees package was split into four core classes, each with a single, clear responsibility:
+Leaf (extend GameObject) – builds one decorative leaf at a given position.
+the class also owns the two Transitions that animate the leaf’s slow sway.
+Fruit (extend GameObject)– builds one fruit in a random colour.
+On onCollisionEnter with an object tagged "avatar" it adds 10 energy to the avatar,
+ hides itself, and schedules a re-spawn after 30 s.
+Tree – a static factory that produces a List<GameObject> containing all parts of one tree
+(trunk segments, leaves, fruit).
+It is also responsible for starting the sway animation on every leaf.
+Flora – creates complete trees at random x-positions as required by the assignment spec.
+To keep encapsulation intact and to let GameManager add every GameObject itself  Flora returns a list of LayeredObject instances.
+LayeredObject is a tiny record that contains (layer, gameObject)
+so GameManager can add each object directly to the correct layer.
+This is important because every part of a tree has a different collision strategy that depends on its layer.
+Dependencies
+Flora depends on Terrain and Tree only.
+Flora depends only on Terrain and Tree.
+Instead of referencing Terrain directly,
+it relies on the GroundHeightProvider interface,
+which exposes a single method groundHeightAt(x).
+Terrain simply implements this interface.
+Flora calls Tree.createTree(...) to obtain the fully-built tree parts.
+we didn't use any design pattern.
