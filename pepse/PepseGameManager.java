@@ -109,16 +109,7 @@ public class PepseGameManager extends GameManager {
 
 		GameObject sunHalo = SunHalo.create(sun);
 		this.gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
-
-		// 5. Create Avatar at terrain height
-//		final int LEFT_MARGIN_X = Block.SIZE * 2;
-//		float groundY = terrain.groundHeightAt(LEFT_MARGIN_X);
-//		float avatarHeight = Avatar.SIZE;
-//		Vector2 avatarPos = new Vector2(LEFT_MARGIN_X, groundY - avatarHeight);
-//
-//		Avatar avatar = new Avatar(avatarPos, inputListener, imageReader);
-//		avatar.setTag(AVATAR_TAG);
-//		this.gameObjects().addGameObject(avatar, Layer.DEFAULT);
+		
 		addAvatar(inputListener,imageReader);
 
 		// 6. Create EnergyIndicator
