@@ -22,7 +22,8 @@ import java.util.Random;
  * <ul>
  *   <li>Drifts the marker leftward at a constant speed (CLOUD_SPEED), wrapping around when off-screen.</li>
  *   <li>Repositions each cloud block each frame based on its stored offset from the marker.</li>
- *   <li>Listens for {@code avatar.jumpJustStarted()} to spawn exactly one raindrop at a random X under the cloud.</li>
+ *   <li>Listens for {@code avatar.jumpJustStarted()} to spawn exactly one raindrop at a
+ *   random X under the cloud.</li>
  *   <li>While {@code avatar.isInAir()}, spawns additional raindrops every RAIN_SPAWN_INTERVAL seconds,
  *   each at a random X under the cloud.</li>
  * </ul>
@@ -82,9 +83,11 @@ public class Cloud {
 	 *       in CAMERA space, computing and storing its offset from the marker.</li>
 	 *   <li>Attach a Component to the marker that:</li>
 	 *     <ul>
-	 *       <li>Drifts the marker leftward at CLOUD_SPEED, wrapping back to the right edge when off-screen.</li>
+	 *       <li>Drifts the marker leftward at CLOUD_SPEED, wrapping back to the right edge
+	 *       when off-screen.</li>
 	 *       <li>Repositions every block each frame so that blockCenter = markerCenter + storedOffset.</li>
-	 *       <li>When {@code avatar.jumpJustStarted()} is true, spawns a single raindrop at a random X under the cloud,
+	 *       <li>When {@code avatar.jumpJustStarted()} is true, spawns a single raindrop at a
+	 *       random X under the cloud,
 	 *           then resets the jump flag and rain-timer.</li>
 	 *       <li>While {@code avatar.isInAir()}, once RAIN_SPAWN_INTERVAL
 	 *       seconds have elapsed, spawns another raindrop
@@ -102,7 +105,8 @@ public class Cloud {
 	 *
 	 * @param windowDimensions The (width, height) of the game window.
 	 * @param gameObjects      The scene’s GameObjectCollection, used to add and remove GameObjects.
-	 * @param avatar           The Avatar instance, used to check {@code jumpJustStarted()} and {@code isInAir()}.
+	 * @param avatar           The Avatar instance, used to check {@code jumpJustStarted()}
+	 *                            and {@code isInAir()}.
 	 * @return The “cloud marker” GameObject (with no renderable) whose center and size define the cloud.
 	 */
 	public static GameObject create(Vector2 windowDimensions,
@@ -180,7 +184,8 @@ public class Cloud {
 			/**
 			 * Called once per frame to:
 			 * <ol>
-			 *   <li>Move the cloud marker left by CLOUD_SPEED * dt; wrap to the right edge if off-screen.</li>
+			 *   <li>Move the cloud marker left by CLOUD_SPEED * dt; wrap to the right edge if
+			 *   off-screen.</li>
 			 *   <li>Reposition each cloud block to (markerCenter + its stored offset).</li>
 			 *   <li>If {@code avatar.jumpJustStarted()} is true, spawn one raindrop
 			 *   at a random X under the cloud,
@@ -268,13 +273,15 @@ public class Cloud {
 					/**
 					 * Called once per frame on the raindrop to:
 					 * <ol>
-					 *   <li>Move the drop downward at RAIN_FALL_SPEED if it has not yet reached the bottom.</li>
+					 *   <li>Move the drop downward at RAIN_FALL_SPEED if it has not yet
+					 *   reached the bottom.</li>
 					 *   <li>Once the drop’s center crosses the bottom of the window, begin fading alpha
 					 *       from 1 to 0 over RAIN_FADE_DURATION.</li>
 					 *   <li>After fading completes, remove the raindrop from the scene.</li>
 					 * </ol>
 					 *
-					 * @param dt Time (in seconds) since the last frame; used for motion and fading calculations.
+					 * @param dt Time (in seconds) since the last frame; used for motion
+					 *                          and fading calculations.
 					 */
 					@Override
 					public void update(float dt) {

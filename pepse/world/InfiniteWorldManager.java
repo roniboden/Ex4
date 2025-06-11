@@ -65,7 +65,7 @@ public class InfiniteWorldManager extends GameObject {
 
 		/* 2. if we are close to the left edge – generate more leftward */
 		if (camLeft - BUFFER < minGeneratedX) {
-			int newMin = minGeneratedX - Block.SIZE * BLOCK_BUFFER;           // grow by 20 blocks
+			int newMin = minGeneratedX - Block.SIZE * BLOCK_BUFFER; // grow by 20 blocks
 			onRangeNeeded.accept(newMin, minGeneratedX);
 			minGeneratedX = newMin;
 		}

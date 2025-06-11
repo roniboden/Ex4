@@ -173,7 +173,7 @@ public class PepseGameManager extends GameManager {
  * which manages the dynamic loading and unloading of terrain blocks
 	 * and flora as the camera moves.
 	 *
-	 * @param windowController The WindowController used to get the window dimensions for camera calculations.
+	 * @param windowController The WindowController used to get the window dimensions for camera calcs.
 	 * @param camera           The Camera that tracks the avatar's position.
 	 * @param initialMinX     The initial minimum X coordinate of the terrain range already built.
 	 * @param initialMaxX     The initial maximum X coordinate of the terrain range already built.

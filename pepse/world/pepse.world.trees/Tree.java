@@ -205,7 +205,7 @@ public final class Tree {
 				toDim,
 				Transition.CUBIC_INTERPOLATOR_VECTOR,
 				MIN_LEAF_SCALE_TRANSITION_DURATION_SECONDS +
-						rand.nextFloat() * LEAF_SCALE_TRANSITION_DURATION_RANGE_SECONDS, // 1.2-2.4 s per half-cycle
+						rand.nextFloat() * LEAF_SCALE_TRANSITION_DURATION_RANGE_SECONDS, //1.2-2.4s per half
 				Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
 				null
 		);
