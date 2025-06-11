@@ -46,7 +46,10 @@ public final class Tree {
 	private static final float LEAF_MISSING_PROB = 0.15f;
 
 	/** Width of a trunk segment, in world pixels.            */
-	private static final float TRUNK_WIDTH        = 25f;
+	private static final float TRUNK_WIDTH = 25f;
+
+	/** Probability to grow a fruit on a given leaf tile. */
+	private static final float FRUIT_PROB = 0.25f;
 
 	/** Height of a single trunk “tile”, in world pixels.     */
 	private static final float TRUNK_HEIGHT_UNIT  = 30f;
@@ -104,8 +107,6 @@ public final class Tree {
 		/* ---------- leaves OR fruit (never both)  ----------------------------- */
 		int leafStartY = Math.round(groundY - TRUNK_HEIGHT_UNIT * trunkHeight);
 
-		/* probability to grow a fruit on a given leaf tile */
-		final float FRUIT_PROB = 0.25f;            // 25 %  – tweak as you like
 
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = 0; dy <= 2; dy++) {

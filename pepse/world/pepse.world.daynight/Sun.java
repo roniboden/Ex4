@@ -28,6 +28,9 @@ public class Sun {
     /** The initialization point of the round, at 0 degrees. */
     private static final float INIT_PT = 360f;
 
+    /** Sun Tag. */
+    private static final String SUN = "sun";
+
     /**
      * Creates and returns a GameObject representing the sun.
      *
@@ -80,7 +83,7 @@ public class Sun {
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
         // 7) Tag it "sun":
-        sun.setTag("sun");
+        sun.setTag(SUN);
 
         // ────────────────────────────────────────────────────────────────────
         // 4.4: Attach a Transition so that the sun “rotates” 360° around cycleCenter

@@ -17,6 +17,9 @@ import pepse.world.LayerProvider;
  */
 public class Leaf extends GameObject implements LayerProvider {
 
+	/** Leaf Tag. */
+	private static final String LEAF = "leaf";
+
 	/**
 	 * Constructs a square leaf renderable.
 	 *
@@ -28,7 +31,7 @@ public class Leaf extends GameObject implements LayerProvider {
 		super(topLeft,
 				new Vector2(size, size),
 				new RectangleRenderable(color));
-		setTag("leaf");
+		setTag(LEAF);
 	}
 
 	/** {@inheritDoc} */

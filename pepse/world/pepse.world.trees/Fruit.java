@@ -31,6 +31,12 @@ public class Fruit extends GameObject implements LayerProvider {
 	/** Energy units restored when picked up. */
 	public static final float ENERGY_VALUE = 10f;
 
+	/** Fruit Tag. */
+	private static final String FRUIT = "fruit";
+
+	/** Avatar Tag. */
+	private static final String AVATAR = "avatar";
+
 	/** Seconds until the fruit reappears after being collected. */
 	private static final float RESPAWN_TIME = 30f;
 
@@ -57,7 +63,7 @@ public class Fruit extends GameObject implements LayerProvider {
 
 		this.renderable = (OvalRenderable) renderer().getRenderable();
 		this.rand       = rand;
-		setTag("fruit");
+		setTag(FRUIT);
 	}
 
 	/** Handles collision with the avatar: recharge, hide, and schedule respawn. */
@@ -66,7 +72,7 @@ public class Fruit extends GameObject implements LayerProvider {
 								 danogl.collisions.Collision col) {
 		super.onCollisionEnter(other, col);
 
-		if (!"avatar".equals(other.getTag())) {
+		if (!AVATAR.equals(other.getTag())) {
 			return;
 		}
 

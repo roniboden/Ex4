@@ -25,6 +25,9 @@ public class Night {
 	/** The opacity at “midnight” (half-opaque black). */
 	private static final Float MIDNIGHT_OPACITY = 0.5f;
 
+	/** Overlay Tag. */
+	private static final String OVERLAY = "DayNightOverlay";
+
 	/**
 	 * Builds a GameObject that covers the entire window with a black overlay.
 	 * The overlay’s alpha transitions from 0.0 → MIDNIGHT_OPACITY → 0.0 over
@@ -59,7 +62,7 @@ public class Night {
 		night.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
 		// 4. Tag the overlay for easy lookup if needed
-		night.setTag("DayNightOverlay");
+		night.setTag(OVERLAY);
 
 		// 5. Start fully transparent (alpha = 0.0 → “daytime”)
 		night.renderer().setOpaqueness(0f);

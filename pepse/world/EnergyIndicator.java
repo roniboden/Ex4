@@ -26,6 +26,7 @@ public final class EnergyIndicator {
 	private static final Color   TEXT_COLOR      = Color.BLACK;
 	private static final DecimalFormat PERCENT_FMT = new DecimalFormat("##0");
 	private static final String INITIAL_TEXT = "100 %";  // initial text in the label
+	private static final String PERCENT_TEXT = " %";
 	/** -------------------------------------- */
 
 	/**
@@ -49,7 +50,7 @@ public final class EnergyIndicator {
 		/* The ctor variant: (text, fontName, isItalic, isBold) */
 		TextRenderable renderable =
 				new TextRenderable(INITIAL_TEXT, FONT_NAME, /*italic*/false, /*bold*/true);
-		renderable.setColor(TEXT_COLOR);  // colour is set afterwards
+		renderable.setColor(TEXT_COLOR);  // color is set afterward
 
 		GameObject label = new GameObject(TEXT_POSITION, TEXT_DIMENSIONS, renderable);
 		label.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
@@ -57,7 +58,7 @@ public final class EnergyIndicator {
 		label.addComponent(new Component() {
 			@Override
 			public void update(float deltaTime) {
-				renderable.setString(PERCENT_FMT.format(avatar.getEnergy()) + " %");
+				renderable.setString(PERCENT_FMT.format(avatar.getEnergy()) + PERCENT_TEXT);
 			}
 		});
 

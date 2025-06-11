@@ -63,6 +63,11 @@ public class Cloud {
 	/** Creates the sky color. */
 	private static final Color SKY_COLOR = new Color(100, 200, 255);
 
+	/** Clouds Tags. */
+	private static final String CLOUD_MARKER = "cloudMarker";
+	private static final String CLOUD_BLOCK = "cloudBlock";
+	private static final String RAIN_DROP = "raindrop";
+
 
 	/**
 	 * Creates a drifting cloud in CAMERA space that rains whenever the avatar jumps
@@ -122,7 +127,7 @@ public class Cloud {
 				/* renderable= */ null
 		);
 		cloudMarker.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-		cloudMarker.setTag("cloudMarker");
+		cloudMarker.setTag(CLOUD_MARKER);
 
 		// 4) Add the marker to the scene on the BACKGROUND layer
 		gameObjects.addGameObject(cloudMarker, danogl.collisions.Layer.BACKGROUND);
@@ -149,7 +154,7 @@ public class Cloud {
 					// (b) Create the block and add it to BACKGROUND
 					GameObject block = new Block(blockTopLeft, rr);
 					block.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-					block.setTag("cloudBlock");
+					block.setTag(CLOUD_BLOCK);
 					gameObjects.addGameObject(block, danogl.collisions.Layer.BACKGROUND);
 
 					// (c) Compute and store the offset = (blockCenter - markerCenter)
@@ -251,7 +256,7 @@ public class Cloud {
 				);
 				drop.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 				drop.renderer().setOpaqueness(1f);
-				drop.setTag("raindrop");
+				drop.setTag(RAIN_DROP);
 
 				gameObjects.addGameObject(drop, danogl.collisions.Layer.FOREGROUND);
 

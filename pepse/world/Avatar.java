@@ -48,6 +48,14 @@ public class Avatar extends GameObject {
 	private boolean isOnGround = false;
 	private boolean jumpJustStarted = false;
 
+	// ─── Cases ──────────────────────────────────────────────────────
+	private final String JUMP = "jump";
+	private final String RUN = "run";
+	private final String IDLE = "idle";
+
+	// ─── Tags ──────────────────────────────────────────────────────
+	private final String GROUND = "ground";
+
 	/**
 	 * Constructs an Avatar instance at the specified position with input and image resources.
 	 * Initializes physics parameters (gravity, collision prevention) and loads the idle, run,
@@ -119,11 +127,11 @@ public class Avatar extends GameObject {
 		// Determine new animation state based on vertical/horizontal velocities
 		String newState;
 		if (yVel != 0) {
-			newState = "jump";
+			newState = JUMP;
 		} else if (xVel != 0) {
-			newState = "run";
+			newState = RUN;
 		} else {
-			newState = "idle";
+			newState = IDLE;
 		}
 
 		// Flip sprite horizontally if moving left vs. right
@@ -138,13 +146,13 @@ public class Avatar extends GameObject {
 		// Switch animation if the state changed
 		if (!newState.equals(state)) {
 			switch (newState) {
-				case "idle":
+				case IDLE:
 					renderer().setRenderable(idleAnim);
 					break;
-				case "run":
+				case RUN:
 					renderer().setRenderable(runAnim);
 					break;
-				case "jump":
+				case JUMP:
 					renderer().setRenderable(jumpAnim);
 					break;
 			}
@@ -198,7 +206,7 @@ public class Avatar extends GameObject {
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		super.onCollisionEnter(other, collision);
-		if (other.getTag().equals("ground")) {
+		if (other.getTag().equals(GROUND)) {
 			transform().setVelocityY(0f);
 		}
 	}
