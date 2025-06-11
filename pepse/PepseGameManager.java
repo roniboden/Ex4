@@ -31,7 +31,9 @@ import pepse.world.pepse.world.trees.Tree;
  * energy indicator, clouds, and randomly planted trees.
  */
 public class PepseGameManager extends GameManager {
-
+	private static final float CYCLE_LEN = 30f;
+	private static final float HALF = 2f;
+	private static final int DOUBLE = 2;
 	/**
 	 * Initializes the Pepse game by creating all necessary game objects and adding them
 	 * to the game’s object collection.
@@ -53,6 +55,7 @@ public class PepseGameManager extends GameManager {
 	 * @param inputListener    A UserInputListener that captures keyboard and mouse events.
 	 * @param windowController A WindowController that provides window dimensions and control.
 	 */
+
 	@Override
 	public void initializeGame(
 			ImageReader imageReader,
@@ -61,6 +64,7 @@ public class PepseGameManager extends GameManager {
 			WindowController windowController) {
 
 		super.initializeGame(imageReader, soundReader, inputListener, windowController);
+
 
 		Vector2 windowDimensions = windowController.getWindowDimensions();
 		int initialMinX = 0;
@@ -80,7 +84,7 @@ public class PepseGameManager extends GameManager {
 		}
 
 		// 3. Create Night overlay (30-second cycle)
-		float cycleLength = 30f;
+		float cycleLength = CYCLE_LEN;
 		GameObject nightOverlay = Night.create(windowDimensions, cycleLength);
 		this.gameObjects().addGameObject(nightOverlay, Layer.FOREGROUND);
 
@@ -92,7 +96,7 @@ public class PepseGameManager extends GameManager {
 		this.gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
 
 		// 5. Create Avatar at terrain height
-		final int LEFT_MARGIN_X = Block.SIZE * 2;
+		final int LEFT_MARGIN_X = Block.SIZE * DOUBLE;
 		float groundY = terrain.groundHeightAt(LEFT_MARGIN_X);
 		float avatarHeight = Avatar.SIZE;
 		Vector2 avatarPos = new Vector2(LEFT_MARGIN_X, groundY - avatarHeight);
@@ -130,7 +134,7 @@ public class PepseGameManager extends GameManager {
 		setCamera(camera);
 
 		/* (2) helper lambdas for InfiniteWorldManager */
-		float halfW= windowController.getWindowDimensions().x() / 2f;
+		float halfW = windowController.getWindowDimensions().x() / HALF;
 		Supplier<Float> camLeft  = () -> camera.getCenter().x() - halfW;
 		Supplier<Float> camRight = () -> camera.getCenter().x() + halfW;
 
