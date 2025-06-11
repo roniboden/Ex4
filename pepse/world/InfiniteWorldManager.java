@@ -30,6 +30,7 @@ public class InfiniteWorldManager extends GameObject {
 	/** --- current generated bounds --- */
 	private int minGeneratedX;
 	private int maxGeneratedX;
+	private static final int BLOCK_BUFFER = 20;
 
 	/**
 	 * Creates an InfiniteWorldManager that will
@@ -64,14 +65,14 @@ public class InfiniteWorldManager extends GameObject {
 
 		/* 2. if we are close to the left edge – generate more leftward */
 		if (camLeft - BUFFER < minGeneratedX) {
-			int newMin = minGeneratedX - Block.SIZE * 20;           // grow by 20 blocks
+			int newMin = minGeneratedX - Block.SIZE * BLOCK_BUFFER;           // grow by 20 blocks
 			onRangeNeeded.accept(newMin, minGeneratedX);
 			minGeneratedX = newMin;
 		}
 
 		/* 3. if close to right edge – generate more rightward */
 		if (camRight + BUFFER > maxGeneratedX) {
-			int newMax = maxGeneratedX + Block.SIZE * 20;
+			int newMax = maxGeneratedX + Block.SIZE * BLOCK_BUFFER;
 			onRangeNeeded.accept(maxGeneratedX, newMax);
 			maxGeneratedX = newMax;
 		}

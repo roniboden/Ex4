@@ -36,8 +36,8 @@ public class PepseGameManager extends GameManager {
 	 * The life cycle duration of the day/night cycle in seconds.
 	 * This value determines how long it takes for the game to transition from day to night and back.
 	 */
-	private static final float LIFE_CYCLE=30f ;
-	private static final String AVATAR_TAG="avatar";
+	private static final float LIFE_CYCLE = 30f ;
+	private static final String AVATAR_TAG = "avatar";
 	/**
 	 * The Flora object that manages the trees and other flora in the game.
 	 */
@@ -47,9 +47,7 @@ public class PepseGameManager extends GameManager {
 	 */
 	private Terrain terrain;
 	private Avatar avatar;
-	//private static final float CYCLE_LEN = 30f;
-	private static final float HALF = 2f;
-	private static final int DOUBLE = 2;
+
 	/**
 	 * Initializes the Pepse game by creating all necessary game objects and adding them
 	 * to the game’s object collection.

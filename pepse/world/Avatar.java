@@ -30,10 +30,12 @@ public class Avatar extends GameObject {
 	private static final float MAX_ENERGY     = 100f;
 	// ─── Size of the avatar in pixels ────────────────────────────────────────────
 	public  static final float SIZE          = 50f;
-	// ─── Animation renderables ──────────────────────────────────────────────────
+	// ─── Animation renderables and parameters ────────────────────────────────────
 	private AnimationRenderable idleAnim;
 	private AnimationRenderable runAnim;
 	private AnimationRenderable jumpAnim;
+	private static final float ONE_MS = 0.1f;
+	private static final float TWO_MS = 0.2f;
 	// ─── State variables ────────────────────────────────────────────────────────
 	private boolean facingLeft = false; // to handle flipping
 	private String state = "idle"; // current animation state: "idle", "run", or "jump"
@@ -74,7 +76,7 @@ public class Avatar extends GameObject {
 				imageReader.readImage("pepse/assets/idle_2.png", true),
 				imageReader.readImage("pepse/assets/idle_3.png", true)
 		};
-		idleAnim = new AnimationRenderable(idleFrames, 0.2f);
+		idleAnim = new AnimationRenderable(idleFrames, TWO_MS);
 
 		// --- Jump animation frames ---
 		ImageRenderable[] jumpFrames = new ImageRenderable[] {
@@ -83,7 +85,7 @@ public class Avatar extends GameObject {
 				imageReader.readImage("pepse/assets/jump_2.png", true),
 				imageReader.readImage("pepse/assets/jump_3.png", true)
 		};
-		jumpAnim = new AnimationRenderable(jumpFrames, 0.1f);
+		jumpAnim = new AnimationRenderable(jumpFrames, ONE_MS);
 
 		// --- Run animation frames ---
 		ImageRenderable[] runFrames = new ImageRenderable[] {
@@ -94,7 +96,7 @@ public class Avatar extends GameObject {
 				imageReader.readImage("pepse/assets/run_4.png", true),
 				imageReader.readImage("pepse/assets/run_5.png", true)
 		};
-		runAnim = new AnimationRenderable(runFrames, 0.1f);
+		runAnim = new AnimationRenderable(runFrames, ONE_MS);
 
 		// Set initial animation to idle
 		renderer().setRenderable(idleAnim);

@@ -19,6 +19,15 @@ import java.awt.Color;
  */
 public class Sun {
 
+    /** Desired radius of the sun orbit. */
+    private static final float ORBIT_RADIUS = 50f;
+
+    /** A full round which is 360 degrees. */
+    private static final float FULL_ROUND = 360f;
+
+    /** The initialization point of the round, at 0 degrees. */
+    private static final float INIT_PT = 360f;
+
     /**
      * Creates and returns a GameObject representing the sun.
      *
@@ -45,7 +54,7 @@ public class Sun {
 
         // 2) Decide on a radius for the sun (its drawn size):
         //    Here, we give the sun a radius of 50 pixels.
-        float sunRadius = 50f;
+        float sunRadius = ORBIT_RADIUS;
 
         // 3) Compute the sun’s initial center so that it sits to the right of cycle center
         //    by exactly “orbitRadius.” Choose orbitRadius so the circle stays on‐screen.
@@ -99,8 +108,8 @@ public class Sun {
             // Move the sun to (cycleCenter + rotated):
             sun.setCenter(cycleCenter.add(rotated));
         },
-                /* initialValue              = */ 0f,                 // start at 0°
-                /* finalValue                = */ 360f,               // end at 360°
+                /* initialValue              = */ INIT_PT,                 // start at 0°
+                /* finalValue                = */ FULL_ROUND,               // end at 360°
                 /* interpolator              = */ Transition.LINEAR_INTERPOLATOR_FLOAT,
                 /* transitionTime            = */ cycleLength,
                 /* transitionType            = */ TransitionType.TRANSITION_LOOP,

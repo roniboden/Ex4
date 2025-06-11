@@ -60,6 +60,10 @@ public class Cloud {
 	/** How long (seconds) for a raindrop to fade from alpha=1 → 0 once it hits the bottom. */
 	private static final float RAIN_FADE_DURATION = 0.5f;
 
+	/** Creates the sky color. */
+	private static final Color SKY_COLOR = new Color(100, 200, 255);
+
+
 	/**
 	 * Creates a drifting cloud in CAMERA space that rains whenever the avatar jumps
 	 * or stays in the air. Each raindrop originates from a random X under the cloud’s width.
@@ -239,7 +243,7 @@ public class Cloud {
 				float dropCenterY  = cloudBottomY + (dropSize / 2f);
 
 				Vector2 dropCenter = new Vector2(dropX, dropCenterY);
-				RectangleRenderable rr = new RectangleRenderable(new Color(100, 200, 255));
+				RectangleRenderable rr = new RectangleRenderable(SKY_COLOR);
 				GameObject drop = new GameObject(
 						dropCenter,
 						new Vector2(dropSize, dropSize),
