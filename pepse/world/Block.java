@@ -9,8 +9,13 @@ import danogl.util.Vector2;
 /**
  * Represents a basic block in the game world.
  * Each block has fixed size, does not move, and prevents objects from intersecting it.
+ * @author Noa
  */
 public class Block extends GameObject {
+	/**
+	 * The size of the block in pixels.
+	 * Blocks are square, so this value represents both width and height.
+	 */
 	public static final int SIZE = 30;
 
 	/**

@@ -7,7 +7,6 @@ import danogl.gui.UserInputListener;
 import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 import danogl.gui.rendering.AnimationRenderable;
-import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.ImageRenderable;
 
 /**
@@ -16,23 +15,31 @@ import danogl.gui.rendering.ImageRenderable;
  * and regenerates when idle on the ground. The class handles animation switching (idle/run/jump),
  * flipping the sprite based on direction, and exposes flags to allow other objects (e.g., Cloud)
  * to detect when a jump begins or when the avatar is airborne.
+ * @author Roni
  */
 public class Avatar extends GameObject {
+	// ─── Physics parameters ──────────────────────────────────────────────────────
 	private static final float GRAVITY        = 600f;
 	private static final float VELOCITY_X     = 400f;
 	private static final float VELOCITY_Y     = -650f;
+	// ─── Energy consumption parameters ──────────────────────────────────────────
 	private static final float JUMP_COST      = 10f;
 	private static final float MOVE_COST      = 0.5f;
 	private static final float IDLE_REGEN     = 1f;
+	// ─── Energy parameters ──────────────────────────────────────────────────────
 	private static final float MAX_ENERGY     = 100f;
+	// ─── Size of the avatar in pixels ────────────────────────────────────────────
 	public  static final float SIZE          = 50f;
+	// ─── Animation renderables ──────────────────────────────────────────────────
 	private AnimationRenderable idleAnim;
 	private AnimationRenderable runAnim;
 	private AnimationRenderable jumpAnim;
+	// ─── State variables ────────────────────────────────────────────────────────
 	private boolean facingLeft = false; // to handle flipping
 	private String state = "idle"; // current animation state: "idle", "run", or "jump"
-
+    // ─── Input listener ─────────────────────────────────────────────────────────
 	private final UserInputListener inputListener;
+	// ─── Energy management ──────────────────────────────────────────────────────
 	private float energy = MAX_ENERGY;
 
 	// ─── Flags for ground/jump state, used by Cloud to decide when to rain ─────

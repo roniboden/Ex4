@@ -18,6 +18,7 @@ import java.awt.Color;
  * smoothly transitions from fully transparent (day) to a semi-transparent midnight state
  * and back to transparent over a specified cycle length. The transition uses a cubic
  * ease-in/out interpolator to simulate a day→night→day effect.</p>
+ * @author Roni
  */
 public class Night {
 
@@ -66,8 +67,8 @@ public class Night {
 		// 6. Prepare Transition parameters
 		float halfCycle = cycleLength / 2f;
 		// Time for one half-cycle (day→midnight or midnight→day)
-		TransitionType transitionType = TransitionType.TRANSITION_BACK_AND_FORTH; // Ping-pong loop (0→0.5→0→…)
-		Interpolator<Float> interpolator = Transition.CUBIC_INTERPOLATOR_FLOAT;   // Smooth ease-in/out curve
+		TransitionType transitionType = TransitionType.TRANSITION_BACK_AND_FORTH;
+		Interpolator<Float> interpolator = Transition.CUBIC_INTERPOLATOR_FLOAT;
 
 		// 7. Attach the Transition that cycles alpha 0.0 → 0.5 → 0.0
 		new Transition<>(

@@ -13,6 +13,7 @@ import pepse.world.LayerProvider;
  * pass through it freely.  By default it is placed on the
  * {@link Layer#BACKGROUND} layer so that trunk segments, fruit, and the avatar
  * render in front of it.</p>
+ * @author Noa
  */
 public class Leaf extends GameObject implements LayerProvider {
 

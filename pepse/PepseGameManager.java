@@ -29,9 +29,25 @@ import pepse.world.pepse.world.trees.Tree;
  * The PepseGameManager class is responsible for setting up and running the Pepse game.
  * It initializes the game world by creating the sky, terrain, day/night cycle, sun, avatar,
  * energy indicator, clouds, and randomly planted trees.
+ * @author Noa & Roni
  */
 public class PepseGameManager extends GameManager {
-	private static final float CYCLE_LEN = 30f;
+	/**
+	 * The life cycle duration of the day/night cycle in seconds.
+	 * This value determines how long it takes for the game to transition from day to night and back.
+	 */
+	private static final float LIFE_CYCLE=30f ;
+	private static final String AVATAR_TAG="avatar";
+	/**
+	 * The Flora object that manages the trees and other flora in the game.
+	 */
+	private Flora flora;
+	/**
+	 * The Terrain object that represents the ground blocks in the game.
+	 */
+	private Terrain terrain;
+	private Avatar avatar;
+	//private static final float CYCLE_LEN = 30f;
 	private static final float HALF = 2f;
 	private static final int DOUBLE = 2;
 	/**
@@ -75,16 +91,17 @@ public class PepseGameManager extends GameManager {
 		this.gameObjects().addGameObject(sky, Layer.BACKGROUND);
 
 		// 2. Create the ground/terrain
-		int seed = new Random().nextInt(); // The seed is made once per run and determines the objects location
+		// The seed is made once per run and determines the objects location
+		int seed = new Random().nextInt();
 		//int seed = 1000;
-		Terrain terrain = new Terrain(windowDimensions, seed);
+		this.terrain = new Terrain(windowDimensions, seed);
 		List<Block> groundBlocks = terrain.createInRange(0, (int) windowDimensions.x());
 		for (Block block : groundBlocks) {
 			this.gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
 		}
 
 		// 3. Create Night overlay (30-second cycle)
-		float cycleLength = CYCLE_LEN;
+		float cycleLength = LIFE_CYCLE;
 		GameObject nightOverlay = Night.create(windowDimensions, cycleLength);
 		this.gameObjects().addGameObject(nightOverlay, Layer.FOREGROUND);
 
@@ -96,14 +113,15 @@ public class PepseGameManager extends GameManager {
 		this.gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
 
 		// 5. Create Avatar at terrain height
-		final int LEFT_MARGIN_X = Block.SIZE * DOUBLE;
-		float groundY = terrain.groundHeightAt(LEFT_MARGIN_X);
-		float avatarHeight = Avatar.SIZE;
-		Vector2 avatarPos = new Vector2(LEFT_MARGIN_X, groundY - avatarHeight);
-
-		Avatar avatar = new Avatar(avatarPos, inputListener, imageReader);
-		avatar.setTag("avatar");
-		this.gameObjects().addGameObject(avatar, Layer.DEFAULT);
+//		final int LEFT_MARGIN_X = Block.SIZE * 2;
+//		float groundY = terrain.groundHeightAt(LEFT_MARGIN_X);
+//		float avatarHeight = Avatar.SIZE;
+//		Vector2 avatarPos = new Vector2(LEFT_MARGIN_X, groundY - avatarHeight);
+//
+//		Avatar avatar = new Avatar(avatarPos, inputListener, imageReader);
+//		avatar.setTag(AVATAR_TAG);
+//		this.gameObjects().addGameObject(avatar, Layer.DEFAULT);
+		addAvatar(inputListener,imageReader);
 
 		// 6. Create EnergyIndicator
 		GameObject energyBar = EnergyIndicator.create(avatar);
@@ -113,18 +131,7 @@ public class PepseGameManager extends GameManager {
 		Cloud.create(windowDimensions, this.gameObjects(), avatar);
 
 		// 8. Plant trees randomly across the terrain
-		int startX = 0;
-		int endX   = (int) windowDimensions.x();
-
-		Flora flora = new Flora(terrain::groundHeightAt, seed);
-
-		/* ---- declare with the new type ---- */
-		List<Flora.LayeredObject> floraObjects = flora.createInRange(startX, endX);
-
-		/* ---- add each object to its preferred layer ---- */
-		for (Flora.LayeredObject lo : floraObjects) {
-			gameObjects().addGameObject(lo.obj(), lo.layer());
-		}
+		addTrees(windowDimensions,  seed);
 		/* (1) build camera exactly as § 9.1 */
 		Camera camera = new Camera(
 				avatar, Vector2.ZERO,
@@ -134,7 +141,50 @@ public class PepseGameManager extends GameManager {
 		setCamera(camera);
 
 		/* (2) helper lambdas for InfiniteWorldManager */
-		float halfW = windowController.getWindowDimensions().x() / HALF;
+		addIninityWorld(windowController, camera,
+				initialMinX, initialMaxX
+		);
+
+	}
+	/**
+	 * Adds trees to the game world by randomly planting them across the terrain.
+	 *
+	 * @param windowDimensions The dimensions of the game window,
+	 *                           used to determine the range for planting trees.
+	 * @param seed             A random seed used to ensure consistent tree placement across game runs.
+	 */
+	private void addTrees(Vector2 windowDimensions, int seed) {
+        //Plant trees randomly across the terrain
+		int startX = 0;
+		int endX   = (int) windowDimensions.x();
+
+		this.flora = new Flora(terrain::groundHeightAt, seed);
+
+		/* ---- declare with the new type ---- */
+		List<Flora.LayeredObject> floraObjects = flora.createInRange(startX, endX);
+
+		/* ---- add each object to its preferred layer ---- */
+		for (Flora.LayeredObject lo : floraObjects) {
+			gameObjects().addGameObject(lo.obj(), lo.layer());
+
+		}
+
+	}
+/**
+	 * Adds an InfiniteWorldManager to the game,
+ * which manages the dynamic loading and unloading of terrain blocks
+	 * and flora as the camera moves.
+	 *
+	 * @param windowController The WindowController used to get the window dimensions for camera calculations.
+	 * @param camera           The Camera that tracks the avatar's position.
+	 * @param initialMinX     The initial minimum X coordinate of the terrain range already built.
+	 * @param initialMaxX     The initial maximum X coordinate of the terrain range already built.
+	 */
+	private void addIninityWorld(WindowController windowController,
+	                            Camera camera,
+	                             int initialMinX, int initialMaxX
+	                            ) {
+		float halfW= windowController.getWindowDimensions().x() / 2f;
 		Supplier<Float> camLeft  = () -> camera.getCenter().x() - halfW;
 		Supplier<Float> camRight = () -> camera.getCenter().x() + halfW;
 
@@ -153,6 +203,20 @@ public class PepseGameManager extends GameManager {
 		);
 		gameObjects().addGameObject(mgr, Layer.BACKGROUND);
 
+	}
+	private void addAvatar(UserInputListener inputListener,
+	                       ImageReader imageReader)  {
+		final int LEFT_MARGIN_X = Block.SIZE * 2;
+		float groundY = terrain.groundHeightAt(LEFT_MARGIN_X);
+		float avatarHeight = Avatar.SIZE;
+		Vector2 avatarPos = new Vector2(LEFT_MARGIN_X, groundY - avatarHeight);
+		 avatar = new Avatar(avatarPos, inputListener, imageReader);
+		avatar.setTag(AVATAR_TAG);
+		this.gameObjects().addGameObject(avatar, Layer.DEFAULT);
+
+		// 6. Create EnergyIndicator
+		GameObject energyBar = EnergyIndicator.create(avatar);
+		this.gameObjects().addGameObject(energyBar, Layer.BACKGROUND);
 	}
 
 	/**

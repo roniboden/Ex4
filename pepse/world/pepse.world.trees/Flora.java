@@ -19,6 +19,7 @@ import java.util.Random;
  * from {@code Objects.hash(x, salt, worldSeed)}, so the same seed and the
  * same {@code x}-coordinate always recreate the identical tree, no matter
  * the call order.</p>
+ * @author noa j
  */
 public class Flora {
 

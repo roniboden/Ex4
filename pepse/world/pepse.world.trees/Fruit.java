@@ -24,6 +24,7 @@ import java.util.Random;
  *       {@link #RESPAWN_TIME} seconds, giving it a fresh random colour so the
  *       player can tell it has respawned.</li>
  * </ol>
+ * @author Noa
  */
 public class Fruit extends GameObject implements LayerProvider {
 
@@ -35,6 +36,10 @@ public class Fruit extends GameObject implements LayerProvider {
 
 	/** Diameter of the fruit (60 % of a leaf tile). */
 	public static final float DIAM = Block.SIZE * 0.6f;
+	/** Colours used for respawn: red, orange, purple. */
+	private static final Color RED = new Color(220, 40, 40);   // red
+	private static final Color ORANGE = new Color(240, 180, 30);   // orange
+	private static final Color PURPLE = new Color(160, 40, 160);    // purple
 
 	private final OvalRenderable renderable;
 	private final Random rand;
@@ -96,10 +101,7 @@ public class Fruit extends GameObject implements LayerProvider {
 	 */
 	private static Color randomColor(Random r) {
 		Color[] palette = {
-				new Color(220, 40, 40),   // red
-				new Color(240,180, 30),   // orange
-				new Color(160, 40,160)    // purple
-		};
+				RED,ORANGE,PURPLE};
 		return palette[r.nextInt(palette.length)];
 	}
 

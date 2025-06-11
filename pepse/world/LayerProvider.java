@@ -9,6 +9,7 @@ import danogl.collisions.Layer;
  * <p>Classes that implement this interface can be queried by utility code
  * (e.g.&nbsp;{@code Flora}) to decide in which {@link Layer} the object should
  * be inserted, without hard-coding layer assignments in multiple places.</p>
+ * @author Noa
  */
 public interface LayerProvider {
 
