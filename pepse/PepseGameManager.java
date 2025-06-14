@@ -109,7 +109,7 @@ public class PepseGameManager extends GameManager {
 
 		GameObject sunHalo = SunHalo.create(sun);
 		this.gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
-		
+
 		addAvatar(inputListener,imageReader);
 
 		// 6. Create EnergyIndicator
